@@ -1,0 +1,59 @@
+<script>
+
+	for(var x=1; x<=3; x++){
+		//var沒有用function(scope)包住，那他的生命週期都會在，即使他在for迴圈裡面
+		console.log("var-infor-x=" + x);
+	}
+	console.log("var-outfor-x=" + x);
+	
+	function test(){
+		for(var y=1; y<=3; y++){
+			//var 包在function(scope)裡面，他的生命週期僅於function內
+			console.log("var-infor-y(in scope)=" + y);
+		}
+		console.log("var-outfor-y(in scope)=" + y);
+	}
+	test();
+	console.log("var-y(out scope)=" + y);
+</script>
+
+<script>
+
+	//let的生命週期以scope(程式區塊、大括號)為分界
+	for(let x1=1; x1<=3; x1++){
+		//x1存在
+		console.log("var-infor-x1=" + x1);
+	}
+	//x1不存在
+	console.log("var-outfor-x1=" + x1);
+	
+	function test(){
+		for(let y1=1; y1<=3; y1++){
+			//y1存在
+			console.log("var-infor-y1(in scope)=" + y1);
+		}
+		//y1不存在
+		console.log("var-outfor-y1(in scope)=" + y1);
+	}
+	test();
+	//y1不存在
+	console.log("var-y1(out scope)=" + y1);
+</script>
+
+<script>
+
+	var x=3; //給值不給值都可以
+	x=6; //可異動變數
+	console.log("x=" + x); 
+	
+	let y; //給值不給值都可以
+	y=6; //可異動變數
+	console.log("y=" + y); 
+
+	const z; //一定要給值
+	const z1 = 100; //一定要給值
+	z1=50; //不可異動變數
+	console.log("z=" + z);
+	console.log("z1=" + z1);
+	
+</script>
