@@ -1,0 +1,20 @@
+<script>
+    //還沒看喔
+
+
+    //這是一個非同步程式的概念
+    let request = new XMLHttpRequest();
+    request.open("get", "Data.txt");
+    request.onload = function () {
+        //send完成才會執行將資料讀出
+        console.log(this.responseText)
+    };
+    //主程式送出連線，交由XMLHttpRequest物件去執行連線細節了。
+    request.send();
+    //送出連線後，馬上執行下面的code
+    console.log("主程式結束。");
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
