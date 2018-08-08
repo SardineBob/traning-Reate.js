@@ -1,0 +1,31 @@
+<script>
+    //定義一個類別
+    class Car {
+        //類別的建構式，實體化時會被執行
+        constructor(color = "白色(預設)") {
+            this.color = color;
+            this.speed = 0; //初始速度
+            console.log(color + "的車子準備好囉。");
+        }
+        //賦予車子行駛的動作
+        run(){
+            console.log(this.color + "的車子開始跑囉。");
+        }
+        runspeed(speed){
+            this.speed = speed;
+            console.log(this.color + "的車子以時速" + this.speed + "公里開始跑囉。");
+        }
+        stop(){
+            this.speed = 0;
+            console.log(this.color + "的車子停下來了(時速" + this.speed + ")。");
+        }
+    }
+    let car1 = new Car("黑色");
+    car1.run();
+    car1.runspeed(60);
+    car1.stop();
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>

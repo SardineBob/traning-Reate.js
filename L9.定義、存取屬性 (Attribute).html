@@ -1,0 +1,32 @@
+<script>
+    //定義一個類別
+    class Car {
+        //類別的建構式，實體化時會被執行
+        constructor(color = "白色(預設)") {
+            console.log(color + "的車子準備好囉。");
+        }
+    }
+    //實體化類別
+    //let car1 = new Car("紅色");
+    //let car2 = new Car();
+
+    //另一種寫法
+    class Dog {
+        constructor(color="白色(預設)") {
+            this.color = color;
+            console.log(this.color + "的狗出生囉。");
+        }
+    }
+    //實體化類別
+    let dog1 = new Dog("紅色");
+    let dog2 = new Dog("黃色");
+    let dog3 = new Dog();
+    //存取實體類別的屬性
+    console.log("第一隻狗改裝前的顏色：" + dog1.color);
+    dog1.color = "黑色";
+    console.log("第一隻狗改裝後的顏色：" + dog1.color);
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
