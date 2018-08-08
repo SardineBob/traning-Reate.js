@@ -1,0 +1,69 @@
+<script>
+    //定義一個類別(父類別)
+    class Car {
+        //類別的建構式，實體化時會被執行
+        constructor(color = "白色(預設)") {
+            this.color = color;
+            this.speed = 0; //初始速度
+            console.log(color + "的車子準備好囉。");
+        }
+        //賦予車子行駛的動作
+        run() {
+            console.log(this.color + "的車子開始跑囉。");
+        }
+        runspeed(speed) {
+            this.speed = speed;
+            console.log(this.color + "的車子以時速" + this.speed + "公里開始跑囉。");
+        }
+        stop() {
+            this.speed = 0;
+            console.log(this.color + "的車子停下來了(時速" + this.speed + ")。");
+        }
+    }
+    //電動車類別(子類別)
+    class ElecCar extends Car {
+        constructor(color, power) {
+            super(color); //一定要先跑父類別的constructor
+            this.power = power;
+            console.log(this.color + "的車子，電量" + this.power + "%準備好囉。");
+        }
+        //修改子類別電動車子行駛的動作
+        run(Dist) {
+            this.power -= Dist;
+            console.log(this.color + "電動車開始跑，並跑了" + Dist + "公里囉。");
+        }
+        //新增子類別才有的充電動作
+        charge() {
+            console.log("充電中......");
+            this.power = 100;
+        }
+    }
+    let car = new ElecCar("黑色", 80);
+    //查看原型鍊
+    let carProto = Object.getPrototypeOf(car);
+    console.log(carProto);
+    let objProto = Object.getPrototypeOf(carProto);
+    console.log(objProto);
+    let lastProto = Object.getPrototypeOf(objProto);
+    console.log(lastProto);
+    let lastlastProto = Object.getPrototypeOf(lastProto);
+    console.log(lastlastProto);
+
+    //可以在物件實體建立方法或屬性
+    this.name = "huge的車";
+    car.name = "流浪漢的車";
+    //箭頭函式對this的作用域是在整個windows
+    car.bomb = (timeout) => {
+        console.log(this.name + "的車將在" + timeout + "秒就會爆炸了。");
+    }
+    //傳統函式對this的作用域僅綁訂在這個物件中
+    car.bomb1 = function (timeout) {
+        console.log(this.name + "的車將在" + timeout + "秒就會爆炸了。");
+    }
+    car.bomb(20);
+    car.bomb1(20);
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>

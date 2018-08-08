@@ -1,0 +1,25 @@
+<script>
+    //定義一個類別(父類別)
+    class Car {
+        //類別的建構式，實體化時會被執行
+        constructor(color) { this.color = color; }
+        //賦予車子行駛的動作
+        run() {
+            console.log(this.color + "的車子開始跑囉。");
+        }
+        static ColorList(){
+            console.log("我們支援紅色、黃色、藍色。");
+        }
+    }
+
+    //Car.ColorList(); //正確，靜態方法可由類別直接呼叫使用。
+    //Car.run(); //錯誤，非靜態方法必須實體化綁定物件後，方可使用。
+
+    let car = new Car("紅色");
+    //car.ColorList(); //錯誤，靜態方法不可由實體化物件去使用。
+    car.run(); //正確，非靜態方法可由綁定物件後使用。
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
