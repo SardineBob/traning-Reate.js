@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script>
+        window.addEventListener("load", () => {
+            //React.createElement() 相當於 <H1>hello react</H1>
+            //let reactElement = React.createElement("H1", null, "hello react");
+            
+            //相當於<input id='reactObj' value='hi react'></input>
+            let reactElement = React.createElement("INPUT", { id: 'reactObj', value: 'hi react' }, null);
+            //把建立的元件，放在容器裡(也就是document.body)
+            ReactDOM.render(reactElement, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>
