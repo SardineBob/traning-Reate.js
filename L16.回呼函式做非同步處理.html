@@ -1,16 +1,33 @@
 <script>
-    //還沒看喔
+    //取得資料的Fun，使用ajax抓資料
+    function getData(callbackFun) {
+        //這是一個非同步程式的概念
+        let request = new XMLHttpRequest();
+        request.open("get", "Data.txt");
+        request.onload = function () {
+            //send完成才會執行將資料讀出
+            callbackFun(this.responseText);
+        };
+        //主程式送出連線，交由XMLHttpRequest物件去執行連線細節了。
+        request.send();
+    }
+    //顯示資料的Fun
+    function showData(message) {
+        console.log("Message=" + message);
+    }
 
-
-    //這是一個非同步程式的概念
-    let request = new XMLHttpRequest();
-    request.open("get", "Data.txt");
-    request.onload = function () {
-        //send完成才會執行將資料讀出
-        console.log(this.responseText)
-    };
-    //主程式送出連線，交由XMLHttpRequest物件去執行連線細節了。
-    request.send();
+    //執行取得資料，並把顯示資料的Fun注入進去
+    //getData(showData);
+    //另一種callback寫法
+    //getData(function(message){
+    //    console.log("Message1=" + message);
+    //});
+    //採用箭頭函式的callback寫法
+    //getData((message)=>(message)); //用這個，console.log的動作變成要寫在call那端裡面
+    //箭頭函式另一種寫法
+    getData((message) => {
+        console.log("Message2=" + message);
+    });
     //送出連線後，馬上執行下面的code
     console.log("主程式結束。");
 </script>

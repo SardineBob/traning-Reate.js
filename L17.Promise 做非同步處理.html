@@ -1,0 +1,38 @@
+<script>
+    //取得資料的Fun，使用ajax抓資料
+    function getData() {
+        let promise = new Promise((success, fail) => {
+            //這是一個非同步程式的概念
+            let request = new XMLHttpRequest();
+            request.open("get", "Data.txt");
+            request.onload = function () {
+                //send完成才會執行將資料讀出
+                success(this.responseText);
+            };
+            request.onerror = function () {
+                fail();
+            }
+            //主程式送出連線，交由XMLHttpRequest物件去執行連線細節了。
+            request.send();
+            //測試程式執行順序
+            console.log("request送出了。");
+        });
+
+        return promise;
+    }
+    //主程式來呼叫
+    getData().then(function (message) {
+        //成功的時候，run的fun
+        console.log("這是成功的訊息:" + message);
+    }, function () {
+        //失敗的時候，run的fun
+        console.log("這是失敗的訊息。");
+    }).catch(function () {
+        console.log("這是發生Exception的訊息。");
+    });
+
+</script>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
