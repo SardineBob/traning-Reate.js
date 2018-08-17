@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script>
+        class flowItem extends React.Component {
+            render() {
+                let id = this.props.id;
+                let schID = this.props.schID;
+                let schNam = this.props.schNam;
+                return React.createElement("div", { id: id, schID: schID }, schNam);
+            }
+        }
+        class FlowList extends React.Component {
+            render() {
+                //產生五個item
+                let flowBuffer = [];
+                for (let i = 1; i <= 5; i++) {
+                    let item = React.createElement(flowItem, { id: "flow" + i, schid: "00" + i, schNam: "這是第" + i + "個流程。" });
+                    flowBuffer.push(item);
+                }
+                //將五個item包進去一個div裡面
+                return React.createElement("div", { id: "lstFlow" }, flowBuffer);
+            }
+        }
+
+        window.addEventListener("load", () => {
+            //可以建立自己定義的component作為react element，並給定屬性
+            let tag = React.createElement(FlowList, null);
+            ReactDOM.render(tag, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script>
+        class reactComponent extends React.Component {
+            render() {
+                console.log(this.props.testAttr1)
+                let element = React.createElement("H1", null, "hello bob!_" + this.props.testAttr);
+                return element; //render這個func，要回傳react element這個組件。
+            }
+        }
+
+        window.addEventListener("load", () => {
+            //可以建立自己定義的component作為react element，並給定屬性
+            let tag = React.createElement(reactComponent, { testAttr: 'OK', testAttr1: 'TEST' });
+            ReactDOM.render(tag, document.body);
+
+            //不是使用component的話，屬性也可以這樣存取。
+            let tag1 = React.createElement("span", { Attr: "test" }, "TESTHIHI");
+            console.log(tag1.props.Attr);
+            tag1.props.Attr = "hihi";
+            console.log(tag1.props.Attr);
+            ReactDOM.render(tag1, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>

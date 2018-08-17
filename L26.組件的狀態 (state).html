@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script>
+        class flowItem extends React.Component {
+            render() {
+                let id = this.props.id;
+                let schID = this.props.schID;
+                let schNam = this.props.schNam;
+                return React.createElement("div", { id: id, schID: schID }, schNam);
+            }
+        }
+        class FlowList extends React.Component {
+            //建構式使用外部傳進來的屬性當參數
+            constructor(props) {
+                //一定要呼叫一下父類別
+                super(props);
+                //初始化這個component的狀態物件
+                this.state = { cnt: 3 };
+                //幾秒後，改變狀態，使用setState()方法狀態改變後，會自動觸發render()，如果直接改this.state則不會觸發
+                //setTimeout(() => {
+                //    this.setState({ cnt: 10 });
+                //}, 2000);
+                this.add();
+            }
+
+            test(){
+                this.add();
+            }
+
+            add() {
+                setTimeout(() => {
+                    this.setState({ cnt: 10 });
+                }, 2000);
+            }
+
+            render() {
+                //產生五個item
+                let flowBuffer = [];
+                for (let i = 1; i <= this.state.cnt; i++) {
+                    let item = React.createElement(flowItem, { id: "flow" + i, schid: "00" + i, schNam: "這是第" + i + "個流程。" });
+                    flowBuffer.push(item);
+                }
+                //將五個item包進去一個div裡面
+                return React.createElement("div", { id: "lstFlow" }, flowBuffer);
+            }
+        }
+
+        window.addEventListener("load", () => {
+            //可以建立自己定義的component作為react element，並給定屬性
+            let tag = React.createElement(FlowList, null);
+            ReactDOM.render(tag, document.body);
+            tag.test();
+            //console.log(tag.type);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>
