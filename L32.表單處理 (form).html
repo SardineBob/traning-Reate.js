@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!--script的type必須使用text/babel，babel才會認得要去編譯-->
+    <style type="text/css">
+        .myclass {
+            font-size: 25px
+        }
+    </style>
+    <script type="text/babel">
+        class MyForm extends React.Component {
+            constructor(props){
+                super(props);
+                this.state={name:"", remark:"", sex:"man", result:"無"};
+            }
+
+            render() {
+                //表單註冊onSubmit事件
+                return <form onSubmit={this.submitFunc.bind(this)}>
+                    姓名：
+                    <input onChange={this.onTextChangeFunc.bind(this)} type="text" id="txtName" value={this.state.name} />
+                    <br/>
+                    說明：
+                    <textarea onChange={this.onTextareaChangeFunc.bind(this)} id="txtRemark" value={this.state.remark} />
+                    <br/>
+                    性別：
+                    <select onChange={this.OnSelectChangeFunc.bind(this)} id="lstSex" value={this.state.sex}>
+                        <option value="man">男人</option>
+                        <option value="woman">女人</option>
+                    </select>
+                    <br/>
+                    結果：
+                    <span>{this.state.result}</span>
+                    <br/>
+                    <input type="submit" id="btnSubmit" value="送出" />
+                </form>;
+            }
+
+            OnSelectChangeFunc(e){
+                //e.currentTarget取得觸發事件的html element
+                this.setState({sex:e.currentTarget.value});
+            }
+
+            onTextareaChangeFunc(e){
+                //e.currentTarget取得觸發事件的html element
+                this.setState({remark:e.currentTarget.value});
+            }
+
+            onTextChangeFunc(e){
+                //e.currentTarget取得觸發事件的html element
+                this.setState({name:e.currentTarget.value});
+            }
+
+            submitFunc(e){
+                e.preventDefault(); //停止瀏覽器預設的表單處理動作
+                console.log("輸入姓名為：" + this.state.name + "；說明為：" + this.state.remark + "；性別為：" + this.state.sex + "，表單已送出");
+                this.setState({result:"輸入姓名為：" + this.state.name + "；說明為：" + this.state.remark + "；性別為：" + this.state.sex + "，表單已送出"});
+                //這樣就可以根據使用者輸入的資料，做後續操作與邏輯
+
+            }
+        }
+
+        window.addEventListener("load", () => {
+            let tag = <MyForm />;
+            ReactDOM.render(tag, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>

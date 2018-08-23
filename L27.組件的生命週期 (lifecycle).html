@@ -22,9 +22,42 @@
                 //一定要呼叫一下父類別
                 super(props);
                 //初始化這個component的狀態物件
-                this.state = { cnt: 3 };
+                this.state = { start: props.start, end: props.end };
                 //this.timeoutSample();
-                this.intervalSample();
+                //this.intervalSample();
+            }
+
+            //建立組件
+            //1.執行constructor()
+            //2.組件即將被mount的前一刻執行
+            componentWillMount() {
+                console.log('組件即將被掛載');
+                alert('組件即將被掛載');
+            }
+            //3.render();
+            //4.組件mount的後一刻執行
+            componentDidMount() {
+                console.log('組件已掛載');
+                alert('組件已掛載');
+            }
+            //更新組件
+            //1.組件即將被undate的前一刻執行
+            componentWillUpdate() {
+                console.log('組件即將被更新');
+                alert('組件即將被更新');
+            }
+            //2.render();
+            //3.組件update的後一刻執行
+            componentDidUpdate() {
+                console.log('組件已更新');
+                alert('組件已更新');
+            }
+
+            //刪除組件
+            //1.組件即將被卸載的前一刻執行
+            componentWillUnmount() {
+                console.log('組件即將被卸載');
+                alert('組件即將被卸載');
             }
 
             timeoutSample() {
@@ -37,7 +70,7 @@
             intervalSample() {
                 setInterval(() => {
                     this.setState((curState, curProp) => {
-                        return { cnt: curState.cnt + 1 };
+                        return { start: curState.cnt + 1 };
                     })
                 }, 1000);
             }
@@ -45,7 +78,7 @@
             render() {
                 //產生五個item
                 let flowBuffer = [];
-                for (let i = 1; i <= this.state.cnt; i++) {
+                for (let i = this.state.start; i <= this.state.end; i++) {
                     let item = React.createElement(flowItem, { id: "flow" + i, schid: "00" + i, schNam: "這是第" + i + "個流程。" });
                     flowBuffer.push(item);
                 }
@@ -56,7 +89,7 @@
 
         window.addEventListener("load", () => {
             //可以建立自己定義的component作為react element，並給定屬性
-            let tag = React.createElement(FlowList, null);
+            let tag = React.createElement(FlowList, { start: 3, end: 25 });
             ReactDOM.render(tag, document.body);
         });
     </script>

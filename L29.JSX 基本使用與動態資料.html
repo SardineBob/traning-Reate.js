@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <!--script的type必須使用text/babel，babel才會認得要去編譯-->
+    <script type="text/babel">
+        class FlowItem extends React.Component {
+            render() {
+                //這是原生的react element建立HTML標籤的寫法
+                //return React.createElement("div", { id: 'id1', schID: 'schid1' }, 'schnam');
+
+                //這是JSX建立HTML標籤的寫法(class要寫成className才能變成標籤的class，因為是follow javascript的規則))
+                //return <div className="head" id={this.props.id} schid={this.props.schid}>訊息為：{this.props.msg}</div>;
+                return <div className="head" id={this.props.id} schid={this.props.schid}>{this.props.schNam}</div>;
+            }
+        }
+
+        class FlowList extends React.Component {
+            render() {
+                //動態產生的寫法，等於是要用一個陣列包裝
+                let list = [];
+                for(let i=1; i<=5; i++){
+                    list.push(<FlowItem id="divFlowItem" schid={"00" + i} schNam={"送總發文" + i} />);
+                }
+
+                return <div>
+                    {/*<FlowItem id="divFlowItem" schid="003" schNam="送總收改分" />
+                    <FlowItem id="divFlowItem" schid="004" schNam="送總發文" />
+                    <FlowItem id="divFlowItem" schid="005" schNam="送存歸檔" />*/}
+                    {list}
+                </div>;
+            }
+        }
+
+        window.addEventListener("load", () => {
+            //這是原生的react element建立組件的寫法
+            //let tag = React.createElement(FlowList, { start: 3, end: 25 });
+            //這是JSX建立組件的寫法
+            //let tag = <FlowItem id="divFlowItem" schid="003" msg="hello react and jsx" />;
+            let tag = <FlowList />;
+
+            ReactDOM.render(tag, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>
