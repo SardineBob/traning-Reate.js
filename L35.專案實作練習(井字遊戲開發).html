@@ -10,66 +10,216 @@
     <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
     <!--script的type必須使用text/babel，babel才會認得要去編譯-->
     <style type="text/css">
-        .switch-off {
-            width: 60px;
-            height: 30px;
-            background-color: #dddddd;
-            border-radius: 15px;
+        .table {
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            position: relative;
         }
 
-        .switch-off>.btn {
-            width: 30px;
-            height: 30px;
-            background-color: #444444;
-            border-radius: 15px;
+        .board {
+            width: 300px;
+            height: 300px;
+            margin: 50px auto;
+            border: 5px solid #000000;
+            border-radius: 10px;
+            position: relative;
         }
 
-        .switch-on {
-            width: 60px;
-            height: 30px;
-            background-color: #ddffdd;
-            border-radius: 15px;
+        .board>.cell {
+            box-sizing: border-box;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            font-size: 50px;
+            text-align: center;
+            border: 1px solid #000000;
+            cursor: pointer;
+            display: inline-block;
+            vertical-align: middle;
         }
 
-        .switch-on>.btn {
-            width: 30px;
-            height: 30px;
-            background-color: #448844;
-            margin-left: 30px;
-            border-radius: 15px;
+        .board>.line {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            width: 300px;
+            height: 300px;
         }
     </style>
     <script type="text/babel">
-        class Switch extends React.Component{
+        //桌子，顯示遊戲狀態
+        class Table extends React.Component{
             constructor(props){
                 super(props);
-                this.state={status: false};
+                this.state = {nowPiece:"O", winnerMsg:""};
             }
-
             render(){
-                return <div class={this.state.status ? "switch-on" : "switch-off"} onClick={this.clickEvent.bind(this)}>
-                        <div class="btn"></div>
-                    </div>
+                return <div class="table">
+                <div>目前的棋子：{this.state.nowPiece}<br/>勝負訊息：{this.state.winnerMsg}</div>
+                <Board updateTableEvent={this.updatePiece.bind(this)} />
+                </div>
             }
-
-            clickEvent(){
-                //this.setState({status: !this.state.status});
-                this.setState((curState)=>({status: !curState.status}));
+            updatePiece(Piece, winner){
+                let winnerMsg = "";
+                if(winner !== null){
+                    winnerMsg = winner.mark==="" ? "平手" : "勝者為" + winner.mark;
+                }
+                this.setState({
+                    nowPiece: Piece,
+                    winnerMsg: winnerMsg
+                    });
             }
         }
+        //遊戲盤
+        class Board extends React.Component{
+            constructor(props){
+                super(props);
+                this.state = {
+                    piece: "O", //目前的棋子，初始為圈圈先開始
+                    cellMark: ["","","","","","","","",""], //""為空、O為圈圈、X為叉叉
+                    winner: null
+                };
+            }
+            render(){
+                //畫出九個格子
+                let Cells = [];
+                for(let i=0; i<=8; i++){
+                    Cells.push(
+                        <Cell mark={this.state.cellMark[i]}
+                        index={i}
+                        clickEvent={this.playing.bind(this)} />);
+                }
+                //如果產生贏家了，就繪製出紅線
+                if(this.state.winner != null){
+                    let startIdx = this.state.winner.startIdx;
+                    let endIdx = this.state.winner.endIdx;
+                    Cells.push(<Line startIdx={startIdx} endIdx={endIdx} />);
+                }
+
+                return <div class="board">{Cells}</div>
+            }
+
+            //這是下棋的動作，依目前的棋子狀態來下
+            playing(index){
+                let marks = this.state.cellMark;
+                if(marks[index] !== "" || this.state.winner !== null) return;//下過的格子不能再次下
+                
+                marks[index] = this.state.piece; //根據目前棋子種類下棋子
+                this.setState((curState)=>({
+                    piece: curState.piece==="O" ? "X" : "O", //下完要換另一手
+                    cellMark: marks,
+                    winner: this.checkWinner() //判斷是否產生贏家
+                    }));
+                //去更新(呼叫)Table的目前棋子的狀態
+                this.props.updateTableEvent(this.state.piece==="O" ? "X" : "O", this.checkWinner());
+            }
+
+            //這是判斷是否有贏家的動作
+            checkWinner(){
+                let marks = this.state.cellMark;
+                //檢查垂直方向是否有相同棋子
+                for(let i=0; i<=2; i++){
+                    if(marks[i] !== "" && marks[i+3] !== "" && marks[i+6] !== "") {
+                        if(marks[i] === marks[i+3] && marks[i+3] === marks[i+6]) {
+                            return {mark:marks[i], startIdx:i, endIdx:i+6};
+                        }
+                    }
+                }
+                //檢查水平方向是否有相同棋子
+                for(let i=0; i<=6; i+=3){
+                    if(marks[i] !== "" && marks[i+1] !== "" && marks[i+2] !== "") {
+                        if(marks[i] === marks[i+1] && marks[i+1] === marks[i+2]) {
+                            return {mark:marks[i], startIdx:i, endIdx:i+2};
+                        }
+                    }
+                }
+                //檢查斜線方向是否有相同棋子
+                for(let i=0; i<=2; i+=2){
+                    if(marks[i] !== "" && marks[i+4-(1*i)] !== "" && marks[i+8-(2*i)] !== "") {
+                        if(marks[i] === marks[i+4-(1*i)] && marks[i+4-(1*i)] === marks[i+8-(2*i)]) {
+                            return {mark:marks[i], startIdx:i, endIdx:i+8-(2*i)};
+                        }
+                    }
+                }
+                //最後檢查是否平手
+                let Tie = true;
+                for(let i=0; i<=8; i++){
+                    if(marks[i] === ""){
+                        Tie = false;
+                    }
+                }
+                if(Tie){
+                    return {mark:"", startIdx:"", endIdx:""};
+                }
+
+                return null;
+            }
+        }
+        //每一格cell
+        class Cell extends React.Component{
+            constructor(props){
+                super(props);
+            }
+            render(){
+                return <div class="cell" onClick={this.clickEvent.bind(this)}>{this.props.mark}</div>
+            }
+            //點擊的事件
+            clickEvent(){
+                this.props.clickEvent(this.props.index);
+            }
+        }
+
+        //贏家的紅線
+        class Line extends React.Component{
+            constructor(props){
+                super(props);
+            }
+            render(){
+                let startIdx = this.props.startIdx;
+                let endIdx = this.props.endIdx;
+                let x1 = "0";
+                let y1 = "0";
+                let x2 = "0";
+                let y2 = "0";
+                //垂直判斷，固定畫線
+                if(startIdx == 0 && endIdx == 6){
+                    x1="50"; y1="0"; x2="50"; y2="300";
+                } else if(startIdx == 1 && endIdx == 7){
+                    x1="150"; y1="0"; x2="150"; y2="300";
+                } else if(startIdx == 2 && endIdx == 8){
+                    x1="250"; y1="0"; x2="250"; y2="300";
+                }
+                //平行判斷，固定畫線
+                if(startIdx == 0 && endIdx == 2){
+                    x1="0"; y1="50"; x2="300"; y2="50";
+                } else if(startIdx == 3 && endIdx == 5){
+                    x1="0"; y1="150"; x2="300"; y2="150";
+                } else if(startIdx == 6 && endIdx == 8){
+                    x1="0"; y1="250"; x2="300"; y2="250";
+                }
+                //斜線判斷，固定畫線
+                if(startIdx == 0 && endIdx == 8){
+                    x1="0"; y1="0"; x2="300"; y2="300";
+                } else if(startIdx == 2 && endIdx == 6){
+                    x1="300"; y1="0"; x2="0"; y2="300";
+                }
+
+                return <svg class="line">
+                    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="red" strokeWidth="5" />
+                </svg>
+            }
+        }
+
         window.addEventListener("load", () => {
-            //ReactDOM.render(<Switch />, document.body);
-            ReactDOM.render(<Switch />, document.getElementById("switch1"));
-            ReactDOM.render(<Switch />, document.getElementById("switch2"));
+            //ReactDOM.render(<Board />, document.body);
+            ReactDOM.render(<Table />, document.body);
         });
     </script>
     <title>Document</title>
 </head>
 
 <body>
-    <div id="switch1"></div>
-    <hr /> <!--水平線-->
-    <div id="switch2"></div>
 </body>
 
 </html>
