@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js" crossorigin></script>
+    <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
+    <script>
+        class flowItem extends React.Component {
+            render() {
+                let id = this.props.id;
+                let schID = this.props.schID;
+                let schNam = this.props.schNam;
+                return React.createElement("div", { id: id, schID: schID }, schNam);
+            }
+        }
+        class FlowList extends React.Component {
+            //建構式使用外部傳進來的屬性當參數
+            constructor(props) {
+                //一定要呼叫一下父類別
+                super(props);
+                //初始化這個component的狀態物件
+                this.state = store.getState(); //直接接redux的狀態儲存空間
+                this.timeoutSample();
+                //this.intervalSample();
+            }
+            //以下三個function為React跟Redux的連接點
+            //實作組件即將mount後一刻執行的動作
+            componentDidMount() {
+                //註冊Redux在狀態改變後串接到react的refresh方法
+                this.unsubscribe = store.subscribe(this.refresh.bind(this));
+            }
+            //實作組件被清除的前一刻執行的動作
+            componentWillUnmount() {
+                //當組件被移除，清空串接的redux狀態更新回應的事件
+                this.unsubscribe();
+            }
+            //實作store狀態改變後要觸發的動作
+            refresh() {
+                //串接Redux狀態改變觸發的事件，進而觸發React的render
+                this.setState(store.getState());
+            }
+
+            timeoutSample() {
+                //幾秒後，改變狀態，使用setState()方法狀態改變後，會自動觸發render()，如果直接改this.state則不會觸發
+                setTimeout(() => {
+                    //this.setState({ cnt: 10 });
+                    //dispatch的行動物件一定要有type的屬性，其他屬性可自由新增
+                    store.dispatch({ type: "UPDATE", max: 50 }); 
+                }, 2000);
+            }
+
+            intervalSample() {
+                setInterval(() => {
+                    store.dispatch({ type: "UPDATE" });
+                }, 1000);
+            }
+
+            render() {
+                //產生五個item
+                let flowBuffer = [];
+                for (let i = 1; i <= this.state.cnt; i++) {
+                    let item = React.createElement(flowItem, { id: "flow" + i, schid: "00" + i, schNam: "這是第" + i + "個流程。" });
+                    flowBuffer.push(item);
+                }
+                //將五個item包進去一個div裡面
+                return React.createElement("div", { id: "lstFlow" }, flowBuffer);
+            }
+        }
+
+        //以下是Redux的程式
+        let store;
+        let reducer = function (state, action) {
+            //根據action.type執行狀態異動的邏輯動作
+            switch (action.type) {
+                case "UPDATE":
+                    return { cnt: action.max };
+                //return { cnt: state.cnt + 1 };
+                default:
+                    return state;
+            }
+        }
+
+        window.addEventListener("load", () => {
+            //初始化Redux
+            store = Redux.createStore(reducer, { cnt: 3 });
+            //初始化React
+            //可以建立自己定義的component作為react element，並給定屬性
+            let tag = React.createElement(FlowList, null);
+            ReactDOM.render(tag, document.body);
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+</body>
+
+</html>

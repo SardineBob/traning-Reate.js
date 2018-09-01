@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://unpkg.com/redux@4.0.0/dist/redux.min.js"></script>
+    <script>
+        //實作狀態改變處理邏輯函式(Reducer)
+        let reducer = function (state /*目前的狀態物件*/, action /*接受到的行動物件，也就是dispatch定義的物件或其屬性*/) {
+            //無論狀態是否改變，【一定要回傳】狀態物件，且回傳的物件會【完全取代】舊的物件
+            switch (action.type) {
+                case "UPDATE":
+                    return { status: !state.status };
+                default:
+                    return state;
+            };
+        };
+        //實作狀態改變後通知處理函式(Handler)
+        let handler = function () {
+            //一旦狀態有變化，會呼叫此程式
+            document.body.innerHTML = store.getState().status ? "ON" : "OFF";
+        };
+        //建立一個store，第一個參數是指定【狀態改變邏輯的函式】，第二個參數是【初始的狀態物件】
+        let store = Redux.createStore(reducer, { status: false });
+        //註冊回應狀態改變的函式
+        //會回傳一個取消訂閱的function，執行這個function就會取消狀態改變回應的動作了(可是狀態仍會改變)
+        let unsubscibe = store.subscribe(handler);
+
+        window.addEventListener("load", () => {
+            document.addEventListener("click", () => {
+                //建立行動物件，透過dispatch派送給狀態處理函式(Reducer)
+                //行動物件中，一定要提供type屬性，代表這次的行動為何
+                store.dispatch({
+                    type: "UPDATE"
+                });
+                unsubscibe(); //取消訂閱，所以點一下動作就無效了
+                console.log(store.getState());
+            });
+        });
+    </script>
+    <title>Document</title>
+</head>
+
+<body>
+    OFF
+</body>
+
+</html>
